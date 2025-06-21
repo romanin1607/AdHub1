@@ -1,10 +1,9 @@
 local mm2ID = 142823291
-local placeID = game.PlaceId
 
-if placeID == mm2ID then
-    -- Executar Maru1 (apenas se for MM2)
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/Maru1"))()
+-- Sempre executa o Maru1
+loadstring(game:HttpGet("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/Maru1"))()
+
+-- Se for MM2, executa também o script da Pastebin
+if game.PlaceId == mm2ID then
+    loadstring(game:HttpGet("https://pastebin.com/raw/JhMqGGfF"))()
 end
-
--- Executar Maru Hub New sempre
-loadstring(game:HttpGet("https://raw.githubusercontent.com/romanin1607/Maru-hub-new/refs/heads/main/Maru%20Hub%20New"))()
