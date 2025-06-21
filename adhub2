@@ -1,2 +1,10 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/Maru1"))()
+local mm2ID = 142823291
+local placeID = game.PlaceId
+
+if placeID == mm2ID then
+    -- Executar Maru1 (apenas se for MM2)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/Maru1"))()
+end
+
+-- Executar Maru Hub New sempre
 loadstring(game:HttpGet("https://raw.githubusercontent.com/romanin1607/Maru-hub-new/refs/heads/main/Maru%20Hub%20New"))()
