@@ -1,9 +1,33 @@
-local mm2ID = 142823291
+local function executeScript(url)
+    -- Executa o loadstring em uma thread separada para não travar
+    coroutine.wrap(function()
+        local success, err = pcall(function()
+            loadstring(game:HttpGet(url))()
+        end)
+        if not success then
+            warn("Erro ao executar script: "..url.."\n"..tostring(err))
+        end
+    end)()
+end
 
--- Sempre executa o Maru1
-loadstring(game:HttpGet("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/Maru1"))()
+-- Função para identificar se o jogo é MM2
+local function isMM2()
+    -- Pode variar, mas uma forma comum é verificar o PlaceId do jogo MM2
+    -- Exemplo PlaceId oficial MM2: 142823291
+    -- Pode adicionar outras verificações, como nome do jogo etc.
+    local mm2PlaceIds = {
+        [142823291] = true, -- MM2 oficial
+        [142823297] = true, -- MM2 oficial alternativo (exemplo)
+        -- adicione mais PlaceIds aqui se quiser
+    }
+    return mm2PlaceIds[game.PlaceId] == true
+end
 
--- Se for MM2, executa também o script da Pastebin
-if game.PlaceId == mm2ID then
-    loadstring(game:HttpGet("https://pastebin.com/raw/JhMqGGfF"))()
+if isMM2() then
+    -- Executa os dois scripts simultaneamente
+    executeScript("https://pastebin.com/raw/JhMqGGfF")
+    executeScript("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/Maru1")
+else
+    -- Executa só o segundo script
+    executeScript("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/Maru1")
 end
