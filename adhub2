@@ -22,7 +22,7 @@ end
 -- Função para identificar se é Grow a Garden Tycoon
 local function isGrowAGarden()
     local growGardenPlaceIds = {
-        [13943940801] = true -- ID do Grow a Garden Tycoon (confirme se é esse)
+        [126884695634066] = true -- ID do Grow a Garden Tycoon (confirme se é esse)
     }
     return growGardenPlaceIds[game.PlaceId] == true
 end
