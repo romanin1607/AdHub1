@@ -1,5 +1,4 @@
 local function executeScript(url)
-    -- Executa o loadstring em uma thread separada para não travar
     coroutine.wrap(function()
         local success, err = pcall(function()
             loadstring(game:HttpGet(url))()
@@ -10,39 +9,33 @@ local function executeScript(url)
     end)()
 end
 
--- Função para identificar se o jogo é MM2
 local function isMM2()
     local mm2PlaceIds = {
-        [142823291] = true, -- MM2 oficial
-        [142823297] = true, -- MM2 alternativo
+        [142823291] = true,
+        [142823297] = true,
     }
     return mm2PlaceIds[game.PlaceId] == true
 end
 
--- Função para identificar se é Grow a Garden Tycoon
 local function isGrowAGarden()
     local growGardenPlaceIds = {
-        [126884695634066] = true -- ID do Grow a Garden Tycoon (confirme se é esse)
+        [126884695634066] = true -- Confirme se esse ID está correto
     }
     return growGardenPlaceIds[game.PlaceId] == true
 end
 
--- Execução baseada no jogo
 if isMM2() then
-    -- Desativa o setclipboard
     hookfunction(setclipboard, function()
         return nil
     end)
 
-    -- Executa scripts do MM2
     executeScript("https://pastebin.com/raw/JhMqGGfF")
     executeScript("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/Maru1")
 
 elseif isGrowAGarden() then
-    -- Executa somente o script do Grow a Garden
+    executeScript("https://pastebin.com/raw/JhMqGGfF")
     executeScript("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/gag")
 
 else
-    -- Executa o Maru1 normalmente
     executeScript("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/Maru1")
 end
