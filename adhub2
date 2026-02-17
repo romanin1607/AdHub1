@@ -7,5 +7,5 @@ or placeId == 75992362647444 then
     loadstring(game:HttpGet("http://109.71.240.235:3910/api/run/eyJpZCI6ImMxNmMyOTc4LTFhZDAtNDY1Yy04MGVkLTVkMDEzZjdhN2ZhOSIsImtpbmQiOiJsb2FkZXIiLCJ2aXN1YWwiOnsiaWQiOiJ1bml2ZXJzYWwifX0"))()
     
 else
-    loadstring(game:HttpGet("https://pastebin.com/U2pdkJWi"))()  
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/romanin1607/AdHub1/refs/heads/main/UI-pronta"))()  
 end
